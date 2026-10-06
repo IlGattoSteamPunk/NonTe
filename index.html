@@ -135,7 +135,7 @@ async function cloudInit(){curMeta=JSON.stringify(metaOf(0));
  try{firebase.initializeApp(FB_CONFIG);fbAuth=firebase.auth();const fs=firebase.firestore();
   document.addEventListener('click',e=>{const b=e.target.closest('[data-si],[data-so]');if(!b)return;
    if(b.dataset.so!==undefined)return fbAuth.signOut();
-   const pr=new firebase.auth.GoogleAuthProvider();fbAuth.signInWithPopup(pr).catch(er=>{if(/popup/.test(er.code))fbAuth.signInWithRedirect(pr);else setStat('Sign-in failed: '+er.code)})});
+   const pr=new firebase.auth.GoogleAuthProvider();fbAuth.signInWithPopup(pr).catch(er=>{if(/popup/.test(er.code))fbAuth.signInWithRedirect(pr);else setStat('Sign-in failed: '+er.code+(er.code==='auth/unauthorized-domain'?' · add "'+(location.hostname||'file:// is not allowed, host the file')+'" to Authorized domains':''))})});
   fbAuth.onAuthStateChanged(u=>{if(fbUnsub){fbUnsub();fbUnsub=null}
    if(!u){cdb=null;ready=true;setStat('Local only');setAcct('<button class="gbtn" data-si>Sign in with Google</button>');return}
    setAcct('<span>'+esc(u.displayName||u.email||'Signed in')+'</span><button class="gbtn" data-so>Sign out</button>');
